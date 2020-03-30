@@ -31,8 +31,13 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         if (fillCount + 1 > capacity) {
             throw new IllegalArgumentException("Ring Buffer Overflow");
         }
-        rb[last] = x;
-        last = (last + 1) % capacity;
+        if (fillCount == 0) {
+            rb[last] = x;
+        } else {
+            last = (last + 1) % capacity;
+            rb[last] = x;
+        }
+
         fillCount += 1;
     }
 
@@ -50,6 +55,10 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         rtItem = rb[first];
         first = (first + 1) % capacity;
         fillCount -= 1;
+        if (fillCount == 0) {
+            first = 0;
+            last = 0;
+        }
         return rtItem;
     }
 
@@ -65,7 +74,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         return rtItem;
     }
 
-    public class ArrayRingBufferIterator implements Iterator<T> {
+    private class ArrayRingBufferIterator implements Iterator<T> {
         private int wizPos;
         private int arrayIndex;
 
