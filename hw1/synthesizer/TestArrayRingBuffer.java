@@ -17,7 +17,7 @@ public class TestArrayRingBuffer {
             arb.enqueue(i);
         }
         Iterator<Integer> arbItor = arb.iterator();
-        while(arbItor.hasNext()) {
+        while (arbItor.hasNext()) {
             System.out.println(arbItor.next());
         }
 

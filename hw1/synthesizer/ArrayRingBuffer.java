@@ -59,7 +59,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
     @Override
     public T peek() {
         T rtItem = null;
-        if(!isEmpty()) {
+        if (!isEmpty()) {
             rtItem = rb[first];
         }
         return rtItem;
