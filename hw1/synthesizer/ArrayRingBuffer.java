@@ -28,8 +28,8 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      */
     @Override
     public void enqueue(T x) {
-        if( fillCount + 1 > capacity) {
-            throw new IllegalArgumentException("Array is full: cannot enqueue");
+        if (fillCount + 1 > capacity) {
+            throw new IllegalArgumentException("Ring Buffer Overflow");
         }
         rb[last] = x;
         last = (last + 1) % capacity;
@@ -44,8 +44,8 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
     @Override
     public T dequeue() {
         T rtItem;
-        if( fillCount == 0) {
-            throw new IllegalArgumentException("Array is empty: cannot dequeue");
+        if (fillCount == 0) {
+            throw new IllegalArgumentException("Ring Buffer Underflow");
         }
         rtItem = rb[first];
         first = (first + 1) % capacity;
@@ -58,8 +58,39 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      */
     @Override
     public T peek() {
-        return rb[first];
+        T rtItem = null;
+        if(!isEmpty()) {
+            rtItem = rb[first];
+        }
+        return rtItem;
     }
 
-    // TODO: When you get to part 5, implement the needed code to support iteration.
+    public class ArrayRingBufferIterator implements Iterator<T> {
+        private int wizPos;
+        private int arrayIndex;
+
+        public ArrayRingBufferIterator() {
+            wizPos = 0;
+            arrayIndex = first;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return wizPos < fillCount;
+        }
+
+        @Override
+        public T next() {
+            T rtVal = rb[arrayIndex];
+            arrayIndex = (arrayIndex + 1) % capacity;
+            wizPos += 1;
+            return rtVal;
+        }
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        Iterator<T> arrayRingBufferIterator =  new ArrayRingBufferIterator();
+        return arrayRingBufferIterator;
+    }
 }
